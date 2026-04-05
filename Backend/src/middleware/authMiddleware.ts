@@ -1,13 +1,17 @@
+import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 
+interface AuthRequest extends Request {
+  idUsuario?: string | number
+}
 
 // Esta funcion es aquella que decodea el token para todas las rutas protegidas
-function authMiddleware(req, res, next) {
+function authMiddleware(req: AuthRequest, res: Response, next: NextFunction): any {
     
-    //El token est en el header de la request
+    //El token está en el header de la request
     const authHeader = req.headers.authorization
 
-    //Caso token vacion
+    //Caso token vacio
     if (!authHeader) {
         return res.status(401).json({ message: 'Sin token' })
     }
@@ -20,12 +24,12 @@ function authMiddleware(req, res, next) {
     }
 
     // funciones nativas de jwt para decodificar y verificar que es correcta
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET as string, (err: any, decoded: any) => {
         if (err) {
             return res.status(401).json({ message: 'Token invalido' })
         }
         
-        //devololver id de usuario decodificado 
+        //devoliver id de usuario decodificado 
         req.idUsuario = decoded.id
         next()
     })
