@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 interface RegisterData {
   nombre: string
@@ -13,6 +14,16 @@ interface UserResponse {
   correo: string
   role: string
   direccion_envio: string
+}
+
+interface LoginData {
+  correo: string
+  password: string
+}
+
+interface LoginResponse {
+  token: string
+  user: UserResponse
 }
 
 interface UserRepository {
@@ -66,6 +77,54 @@ class UserService {
       correo: createdUser.correo,
       role: createdUser.role,
       direccion_envio: createdUser.direccion_envio
+    }
+  }
+
+  async login(loginData: LoginData): Promise<LoginResponse> {
+    const { correo, password } = loginData
+
+    if (!correo || !password) {
+      const error: CustomError = new Error('correo y password son obligatorios')
+      error.statusCode = 400
+      throw error
+    }
+
+    const user = await this.userRepository.findByCorreo(correo)
+    if (!user) {
+      const error: CustomError = new Error('Credenciales invalidas')
+      error.statusCode = 401
+      throw error
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password)
+    if (!isValidPassword) {
+      const error: CustomError = new Error('Credenciales invalidas')
+      error.statusCode = 401
+      throw error
+    }
+
+    const jwtSecret = process.env.JWT_SECRET
+    if (!jwtSecret) {
+      const error: CustomError = new Error('JWT_SECRET no configurada en variables de entorno')
+      error.statusCode = 500
+      throw error
+    }
+
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      jwtSecret,
+      { expiresIn: '1h' }
+    )
+
+    return {
+      token,
+      user: {
+        id: user.id,
+        nombre: user.nombre,
+        correo: user.correo,
+        role: user.role,
+        direccion_envio: user.direccion_envio
+      }
     }
   }
 }

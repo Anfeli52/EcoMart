@@ -2,6 +2,7 @@ import type { Request, Response } from 'express'
 
 interface UserService {
   register(userData: any): Promise<any>
+  login(loginData:any): Promise<any>
 }
 
 interface CustomError extends Error {
@@ -21,6 +22,20 @@ class UserController {
       return res.status(201).json({
         message: 'Usuario creado correctamente',
         user
+      })
+    } catch (error: any) {
+      return res.status(error.statusCode || 500).json({
+        message: error.message || 'Error interno del servidor'
+      })
+    }
+  }
+
+  async login(req: Request, res: Response): Promise<Response> {
+    try {
+      const loginResult = await this.userService.login(req.body)
+      return res.status(200).json({
+        message: 'Login correcto',
+        ...loginResult
       })
     } catch (error: any) {
       return res.status(error.statusCode || 500).json({
