@@ -113,7 +113,7 @@ class UserService {
     const token = jwt.sign(
       { id: user.id, role: user.role },
       jwtSecret,
-      { expiresIn: '1h' }
+      { expiresIn: '12h' }
     )
 
     return {
