@@ -13,10 +13,92 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  nombre      String
-  correo     String   @unique
-  password  String
-  role      String   @default("user")
+  id                Int               @id @default(autoincrement())
+  nombre            String
+  correo            String            @unique
+  password          String
+  role              String            @default("user")
   direccion_envio   String
+
+  carrito           Carrito?
+  ordenes           Orden[]
+}
+
+model Carrito {
+  id                Int               @id @default(autoincrement())
+  id_usuario        Int               @unique
+  usuario           User              @relation(fields: [id_usuario], references: [id])
+  fecha_creacion    DateTime          @default(now())
+  items             Item_Carrito[]
+}
+
+enum CategoriaProducto {
+  ELECTRONICA
+  ROPA
+  HOGAR
+  DEPORTES
+  OTROS
+}
+
+model Producto {
+  id                Int               @id @default(autoincrement())
+  nombre            String
+  descripcion       String
+  precio            Decimal           @db.Decimal(10, 2)
+  stock             Int
+  categoria         CategoriaProducto
+  imagenUrl         String
+  items             Item_Carrito[]
+  detalles    Detalle_Orden[]
+}
+
+model Item_Carrito {
+  id                Int               @id @default(autoincrement())
+  id_carrito        Int
+  carrito           Carrito           @relation(fields: [id_carrito], references: [id])
+  id_producto       Int
+  producto          Producto          @relation(fields: [id_producto], references: [id])
+  cantidad          Int
+
+  @@unique([id_carrito, id_producto])
+}
+
+enum EstadoOrden {
+  PENDIENTE
+  PAGADA
+  PROCESANDO
+  ENVIADA
+  ENTREGADA
+  CANCELADA
+}
+
+model Orden {
+  id                Int               @id @default(autoincrement())
+  id_usuario        Int
+  usuario           User              @relation(fields: [id_usuario], references: [id])
+  fecha             DateTime          @default(now())
+  estado            EstadoOrden
+  total             Decimal           @db.Decimal(10, 2)
+  detalles          Detalle_Orden[]
+  factura           Factura?
+}
+
+model Detalle_Orden {
+  id                Int               @id @default(autoincrement())
+  id_orden          Int
+  orden             Orden             @relation(fields: [id_orden], references: [id])
+  id_producto       Int
+  producto          Producto          @relation(fields: [id_producto], references: [id])
+  cantidad          Int
+  precio_fijo       Decimal           @db.Decimal(10, 2)
+
+  @@unique([id_orden, id_producto])
+}
+
+model Factura {
+  id                Int               @id @default(autoincrement())
+  id_orden          Int               @unique
+  orden             Orden             @relation(fields: [id_orden], references: [id])
+  fecha             DateTime          @default(now())
+  total             Decimal           @db.Decimal(10, 2)
 }
