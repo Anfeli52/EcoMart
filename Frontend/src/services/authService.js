@@ -1,37 +1,23 @@
-const API_URL = "http://localhost:3000";
+import api from "../api/axios";
 
 export const registerUser = async (data) => {
-    const response = await fetch(`${API_URL}/user/register`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-        throw new Error(result.message || "Error en el registro");
+    try {
+        const response = await api.post("/user/register", data);
+        return response.data;
+    } catch (error) {
+        throw new Error(
+            error.response?.data?.message || "Error en el registro"
+        );
     }
-
-    return result;
 };
 
 export const loginUser = async (data) => {
-    const response = await fetch(`${API_URL}/user/login`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-        throw new Error(result.message || "Error en el login");
+    try {
+        const response = await api.post("/user/login", data);
+        return response.data;
+    } catch (error) {
+        throw new Error(
+            error.response?.data?.message || "Error en el login"
+        );
     }
-
-    return result;
 };
