@@ -1,27 +1,39 @@
-import { useState, useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { useState, useContext, type ChangeEvent, type FormEvent } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
+import type { LoginData } from "../../types/types";
 
 const Login = () => {
-    const { login } = useContext(AuthContext);
-    const [form, setForm] = useState({
+    const auth  = useContext(AuthContext);
+    
+    if(!auth){
+        throw new Error("AuthContext no disponible");
+    }
+
+    const { login } = auth;
+    const [form, setForm] = useState<LoginData>({
         correo: "",
         password: ""
     });
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setForm({
             ...form,
             [e.target.name]: e.target.value
         })
     }
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             const response = await login(form);
             alert(response.message || "Inicio de sesión exitoso");
-        } catch (error) {
-            alert(error.message || "Error en el inicio de sesión");
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(error.message);
+            } else {
+                alert("Error en el inicio de sesión");
+            }
         }
     }
 
@@ -33,7 +45,7 @@ const Login = () => {
                 <input type="password" name="password" placeholder="Contraseña" onChange={handleChange} required />
                 <button type="submit">Iniciar Sesión</button>
                 <div className="link">
-                    <a href="/register">¿No tienes cuenta? Regístrate</a>
+                    <Link to="/register">¿No tienes cuenta? Regístrate</Link>
                 </div>
             </form>
         </div>

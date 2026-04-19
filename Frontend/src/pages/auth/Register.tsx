@@ -1,33 +1,38 @@
-import { useState } from "react";
-import { registerUser } from "../services/authService";
+import { useState, type ChangeEvent, type FormEvent } from "react";
+import { registerUser } from "../../services/auth/authService";
+import type { RegisterData } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
 
     const navigate = useNavigate();
 
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<RegisterData>({
         nombre: "",
         correo: "",
         password: "",
         direccion_envio: ""
     });
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setForm({
             ...form,
             [e.target.name]: e.target.value
         })
     }
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             const response = await registerUser(form);
             alert(response.message || "Registro exitoso");
             navigate("/login");
-        } catch (error) {
-            alert(error.message || "Error en el registro");
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(error.message);
+            } else {
+                alert("Error en el registro");
+            }
         }
     }
 
