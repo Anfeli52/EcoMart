@@ -12,6 +12,9 @@ const router = express.Router()
 // el controlador obtiene el query, y manda lo que se le pida
 router.get('/', (req, res) => productoController.getProductos(req, res))
 
+// POST /producto -> crear producto
+router.post('/', (req, res) => productoController.postProducto(req, res))
+
 // GET /producto/categorias define las categorias que existen, como para la checkbox en el front
 router.get('/categorias', (req, res) => productoController.getCategoriasDisponibles(req, res))
 

@@ -6,6 +6,7 @@ interface ProductoService {
 	getProductosPorCategorias(categorias: string): Promise<any[]>
 	getProductosPorNombre(nombre: string): Promise<any[]>
 	getCategoriasDisponibles(): string[]
+	postProducto(productoData: any): Promise<any>
 }
 
 class ProductoController {
@@ -68,6 +69,21 @@ class ProductoController {
 		const categorias = this.productoService.getCategoriasDisponibles()
 		return res.status(200).json({ categorias })
 	}
+
+  async postProducto(req: Request, res: Response): Promise<Response> {
+		try {
+			const producto = await this.productoService.postProducto(req.body)
+			return res.status(201).json({
+				message: 'Producto creado correctamente',
+				producto
+			})
+		} catch (error: any) {
+			return res.status(error.statusCode || 500).json({
+				message: error.message || 'Error interno del servidor'
+			})
+		}
+	}
+
 }
 
 export default ProductoController

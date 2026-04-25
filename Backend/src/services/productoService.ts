@@ -5,6 +5,16 @@ interface ProductoRepository {
 	findByCategoria(categoria: CategoriaProducto): Promise<any[]>
 	findByCategorias(categorias: CategoriaProducto[]): Promise<any[]>
 	findByNombre(nombre: string): Promise<any[]>
+	createProducto(productoData: CreateProductoData): Promise<any>
+}
+
+interface CreateProductoData {
+	nombre: string
+	descripcion: string
+	precio: number
+	stock: number
+	categoria: CategoriaProducto
+	imagenUrl: string
 }
 
 interface CustomError extends Error {
@@ -60,6 +70,39 @@ class ProductoService {
 		}
 
 		return this.productoRepository.findByNombre(nombre)
+	}
+
+	async postProducto(productoData: CreateProductoData): Promise<any> {
+		const { nombre, descripcion, precio, stock, categoria, imagenUrl } = productoData
+
+		if (!nombre || !descripcion || precio === undefined || stock === undefined || !categoria || !imagenUrl) {
+			const error: CustomError = new Error('nombre, descripcion, precio, stock, categoria e imagenUrl son obligatorios')
+			error.statusCode = 400
+			throw error
+		}
+
+		if (Number(precio) <= 0) {
+			const error: CustomError = new Error('precio debe ser mayor que 0')
+			error.statusCode = 400
+			throw error
+		}
+
+		if (!Number.isInteger(Number(stock)) || Number(stock) < 0) {
+			const error: CustomError = new Error('stock debe ser un entero mayor o igual a 0')
+			error.statusCode = 400
+			throw error
+		}
+
+		const categoriaValida = this.parseCategoria(categoria)
+
+		return this.productoRepository.createProducto({
+			nombre: nombre.trim(),
+			descripcion: descripcion.trim(),
+			precio: Number(precio),
+			stock: Number(stock),
+			categoria: categoriaValida,
+			imagenUrl: imagenUrl.trim()
+		})
 	}
 
 	getCategoriasDisponibles(): CategoriaProducto[] {

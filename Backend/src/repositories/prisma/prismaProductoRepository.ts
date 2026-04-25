@@ -1,6 +1,15 @@
 import { PrismaClient, type CategoriaProducto } from '@prisma/client'
 import ProductoRepository from '../interfaces/productoRepository.ts'
 
+interface CreateProductoData {
+	nombre: string
+	descripcion: string
+	precio: number
+	stock: number
+	categoria: CategoriaProducto
+	imagenUrl: string
+}
+
 class PrismaProductoRepository extends ProductoRepository {
 	private prisma: PrismaClient
 
@@ -41,6 +50,12 @@ class PrismaProductoRepository extends ProductoRepository {
 				}
 			},
 			orderBy: { id: 'asc' }
+		})
+	}
+
+	async createProducto(productoData: CreateProductoData): Promise<any> {
+		return this.prisma.producto.create({
+			data: productoData
 		})
 	}
 }
