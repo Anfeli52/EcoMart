@@ -44,6 +44,7 @@ const Login = () => {
                 <input type="email" name="correo" placeholder="Correo" onChange={handleChange} required />
                 <input type="password" name="password" placeholder="Contraseña" onChange={handleChange} required />
                 <button type="submit">Iniciar Sesión</button>
+                <button type="button" className="back-button" onClick={() => navigate("/")}>Cancelar</button>
                 <div className="link">
                     <Link to="/register">¿No tienes cuenta? Regístrate</Link>
                 </div>
