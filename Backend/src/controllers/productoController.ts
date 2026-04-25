@@ -70,7 +70,7 @@ class ProductoController {
 		return res.status(200).json({ categorias })
 	}
 
-  async postProducto(req: Request, res: Response): Promise<Response> {
+	async postProducto(req: Request, res: Response): Promise<Response> {
 		try {
 			const producto = await this.productoService.postProducto(req.body)
 			return res.status(201).json({
