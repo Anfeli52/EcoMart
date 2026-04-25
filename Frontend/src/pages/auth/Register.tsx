@@ -45,6 +45,8 @@ const Register = () => {
                 <input type="password" name="password" placeholder="Contraseña" onChange={handleChange} required />
                 <input type="text" name="direccion_envio" placeholder="Dirección de Envío" onChange={handleChange} required />
                 <button type="submit">Registrarse</button>
+                <button type="button" className="back-button" onClick={() => navigate("/")}>Cancelar</button>
+                <div className="link"><Link to="/login">¿Ya tienes una cuenta? Inicia sesión</Link></div>
             </form>
         </div>
     )
