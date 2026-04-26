@@ -4,6 +4,7 @@ import type { User, LoginData, LoginResponse } from "../types/types";
 
 interface AuthContextType {
     user: User | null;
+    token: string | null;
     login: (data: LoginData) => Promise<LoginResponse>;
     logout: () => void;
 }
@@ -15,12 +16,18 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(() => {
+        const storedUser = localStorage.getItem("user");
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
+    const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
 
     const login = async (data: LoginData) => {
         const response = await loginUser(data);
         
         localStorage.setItem("token", response.token);
+        localStorage.setItem("user", JSON.stringify(response.user));
+        setToken(response.token);
         setUser(response.user);
 
         return response;
@@ -28,11 +35,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const logout = () => {
         setUser(null);
+        setToken(null);
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, token, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

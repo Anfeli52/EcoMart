@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getProducts } from "../services/product/productService";
 import type { Producto } from "../types/types";
+import { useAuth } from "../hooks/useAuth";
 import carritoIcon from "../assets/shopCart.png"
 import "../Home.css";
+
 
 
 const Home = () => {
@@ -13,6 +15,8 @@ const Home = () => {
     
     const [productos, setProductos] = useState<Producto[]>([]);
     
+    const { token, user, logout } = useAuth();
+
     useEffect(() => {
         const cargarProductos = async () => {
             try {
@@ -31,8 +35,8 @@ const Home = () => {
         setModalVisible(true);
     };
 
-const cerrarModal = () => setModalVisible(false);
-const verCarrito = () => navigate("/cart");
+    const cerrarModal = () => setModalVisible(false);
+    const verCarrito = () => navigate("/cart");
 
     return (
         <div className="home-page">
@@ -42,11 +46,23 @@ const verCarrito = () => navigate("/cart");
                     <input type="text" placeholder="Buscar" />
                 </div>
                 <div className="home-actions">
-                    <button className="icon-button shopCart">
+                    <button className="icon-button shopCart"
+                    onClick={verCarrito}>
                         <img src={carritoIcon} alt="Carrito de compras"/>
                     </button>
-                    <Link to="/login" className="home-button login">Iniciar sesión</Link>
-                    <Link to="/register" className="home-button register">Registrarse</Link>
+                    <div className="home-navbar">
+                        { token ? (
+                            <div>
+                                <span className="home-user">Hola, {user?.nombre ?? "Usuario"}</span>
+                                <button className="home-button logout" onClick={logout}>Cerrar Sesión</button>
+                            </div>
+                        ): (
+                            <div>
+                                <Link to="/login" className="home-button login">Iniciar sesión</Link>
+                                <Link to="/register" className="home-button register">Registrarse</Link>
+                            </div>
+                        )}
+                    </div> 
                 </div>
             </header>
             {modalVisible && (

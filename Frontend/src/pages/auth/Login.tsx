@@ -1,11 +1,12 @@
 import { useState, useContext, type ChangeEvent, type FormEvent } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { LoginData } from "../../types/types";
 
 const Login = () => {
     const auth  = useContext(AuthContext);
-    
+    const navigate = useNavigate();
+
     if(!auth){
         throw new Error("AuthContext no disponible");
     }
@@ -26,8 +27,8 @@ const Login = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await login(form);
-            alert(response.message || "Inicio de sesión exitoso");
+            await login(form);
+            navigate("/")
         } catch (error: unknown) {
             if (error instanceof Error) {
                 alert(error.message);
