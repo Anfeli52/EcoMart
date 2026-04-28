@@ -6,8 +6,6 @@ import { useAuth } from "../hooks/useAuth";
 import carritoIcon from "../assets/shopCart.png"
 import "../Home.css";
 
-
-
 const Home = () => {
     const navigate = useNavigate();
     const [cartCount, setCartCount] = useState(0);
@@ -53,7 +51,7 @@ const Home = () => {
                     <div className="home-navbar">
                         { token ? (
                             <div>
-                                <span className="home-user">Hola, {user?.nombre ?? "Usuario"}</span>
+                                <span className="home-user">Hola, {user ?? "Usuario"}</span>
                                 <button className="home-button logout" onClick={logout}>Cerrar Sesión</button>
                             </div>
                         ): (
