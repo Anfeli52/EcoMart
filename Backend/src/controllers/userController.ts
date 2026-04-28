@@ -1,16 +1,8 @@
 import type { Request, Response } from 'express'
-
-interface UserService {
-  register(userData: any): Promise<any>
-  login(loginData:any): Promise<any>
-}
-
-interface CustomError extends Error {
-  statusCode?: number
-}
+import UserService from '../services/userService'
 
 class UserController {
-  private userService: UserService
+  private userService: UserService;
 
   constructor(userService: UserService) {
     this.userService = userService
