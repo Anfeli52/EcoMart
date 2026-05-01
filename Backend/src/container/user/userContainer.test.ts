@@ -42,7 +42,8 @@ class UserControllerMock {
 }
 
 describe('userContainerFactory', () => {
-	it('construye las dependencias usando el databaseUrl recibido', () => {
+	describe('Happy Path - Construcción de dependencias', () => {
+		it('construye las dependencias usando el databaseUrl recibido', () => {
 		const databaseUrl = 'mariadb://localhost:3306/ecomart'
 
 		const { userController } = createUserContainer({
@@ -60,22 +61,25 @@ describe('userContainerFactory', () => {
 		expect(userController.userService.userRepository.prisma).toBeInstanceOf(PrismaClientMock)
 		expect(userController.userService.userRepository.prisma.config.adapter).toBeInstanceOf(PrismaMariaDbMock)
 		expect(userController.userService.userRepository.prisma.config.adapter.databaseUrl).toBe(databaseUrl)
+		})
 	})
 
-	it('lanza error si no recibe databaseUrl y no existe DATABASE_URL', () => {
-		const originalDatabaseUrl = process.env.DATABASE_URL
-		delete process.env.DATABASE_URL
+	describe('Negative Testing - Configuración faltante', () => {
+		it('lanza error si no recibe databaseUrl y no existe DATABASE_URL', () => {
+			const originalDatabaseUrl = process.env.DATABASE_URL
+			delete process.env.DATABASE_URL
 
-		try {
-			expect(() => createUserContainer()).toThrow(
-				'DATABASE_URL no esta definida en variables de entorno'
-			)
-		} finally {
-			if (originalDatabaseUrl === undefined) {
-				delete process.env.DATABASE_URL
-			} else {
-				process.env.DATABASE_URL = originalDatabaseUrl
+			try {
+				expect(() => createUserContainer()).toThrow(
+					'DATABASE_URL no esta definida en variables de entorno'
+				)
+			} finally {
+				if (originalDatabaseUrl === undefined) {
+					delete process.env.DATABASE_URL
+				} else {
+					process.env.DATABASE_URL = originalDatabaseUrl
+				}
 			}
-		}
+		})
 	})
 })

@@ -18,8 +18,9 @@ describe('PrismaUserRepository', () => {
 		prismaUserRepository = new PrismaUserRepository(mockPrismaClient as PrismaClient)
 	})
 
-	describe('findByCorreo', () => {
-		it('retorna el usuario cuando existe', async () => {
+	describe('Happy Path - Operaciones válidas', () => {
+		describe('findByCorreo', () => {
+			it('retorna el usuario cuando existe', async () => {
 			const user = {
 				id: 1,
 				nombre: 'Juan',
@@ -36,9 +37,51 @@ describe('PrismaUserRepository', () => {
 			expect(mockPrismaClient.user!.findUnique).toHaveBeenCalledWith({
 				where: { correo: 'juan@mail.com' }
 			})
+			})
 		})
 
-		it('retorna null si usuario no existe', async () => {
+		describe('hasUsers', () => {
+			it('retorna true si existen usuarios', async () => {
+				const user = { id: 1 }
+				;(mockPrismaClient.user!.findFirst as jest.Mock).mockResolvedValueOnce(user)
+
+				const result = await prismaUserRepository.hasUsers()
+
+				expect(result).toBe(true)
+				expect(mockPrismaClient.user!.findFirst).toHaveBeenCalledWith({
+					select: { id: true }
+				})
+			})
+		})
+
+		describe('createUser', () => {
+			it('crea un nuevo usuario correctamente', async () => {
+				const userData = {
+					nombre: 'Juan',
+					correo: 'juan@mail.com',
+					password: 'hashedPassword123',
+					direccion_envio: 'Calle 123',
+					role: 'user'
+				}
+				const createdUser = {
+					id: 1,
+					...userData
+				}
+				;(mockPrismaClient.user!.create as jest.Mock).mockResolvedValueOnce(createdUser)
+
+				const result = await prismaUserRepository.createUser(userData)
+
+				expect(result).toEqual(createdUser)
+				expect(mockPrismaClient.user!.create).toHaveBeenCalledWith({
+					data: userData
+				})
+			})
+		})
+	})
+
+	describe('Negative Testing - Resultados vacíos o nulos', () => {
+		describe('findByCorreo', () => {
+			it('retorna null si usuario no existe', async () => {
 			;(mockPrismaClient.user!.findUnique as jest.Mock).mockResolvedValueOnce(null)
 
 			const result = await prismaUserRepository.findByCorreo('noexiste@mail.com')
@@ -47,39 +90,28 @@ describe('PrismaUserRepository', () => {
 			expect(mockPrismaClient.user!.findUnique).toHaveBeenCalledWith({
 				where: { correo: 'noexiste@mail.com' }
 			})
-		})
-	})
-
-	describe('hasUsers', () => {
-		it('retorna true si existen usuarios', async () => {
-			const user = { id: 1 }
-			;(mockPrismaClient.user!.findFirst as jest.Mock).mockResolvedValueOnce(user)
-
-			const result = await prismaUserRepository.hasUsers()
-
-			expect(result).toBe(true)
-			expect(mockPrismaClient.user!.findFirst).toHaveBeenCalledWith({
-				select: { id: true }
 			})
 		})
 
-		it('retorna false si no existen usuarios', async () => {
-			;(mockPrismaClient.user!.findFirst as jest.Mock).mockResolvedValueOnce(null)
+		describe('hasUsers', () => {
+			it('retorna false si no existen usuarios', async () => {
+				;(mockPrismaClient.user!.findFirst as jest.Mock).mockResolvedValueOnce(null)
 
-			const result = await prismaUserRepository.hasUsers()
+				const result = await prismaUserRepository.hasUsers()
 
-			expect(result).toBe(false)
+				expect(result).toBe(false)
+			})
 		})
 	})
 
-	describe('createUser', () => {
-		it('crea un nuevo usuario correctamente', async () => {
+	describe('Boundary Testing - Crear usuario con roles y datos exactos', () => {
+		it('crea usuario con rol admin cuando hasUsers retorna false', async () => {
 			const userData = {
-				nombre: 'Juan',
-				correo: 'juan@mail.com',
-				password: 'hashedPassword123',
-				direccion_envio: 'Calle 123',
-				role: 'user'
+				nombre: 'Admin User',
+				correo: 'admin@mail.com',
+				password: 'hashedPassword',
+				direccion_envio: 'Calle Principal',
+				role: 'admin'
 			}
 			const createdUser = {
 				id: 1,
@@ -89,9 +121,9 @@ describe('PrismaUserRepository', () => {
 
 			const result = await prismaUserRepository.createUser(userData)
 
-			expect(result).toEqual(createdUser)
+			expect(result.role).toBe('admin')
 			expect(mockPrismaClient.user!.create).toHaveBeenCalledWith({
-				data: userData
+				data: expect.objectContaining({ role: 'admin' })
 			})
 		})
 
