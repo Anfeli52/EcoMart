@@ -36,14 +36,10 @@ test.describe('Auth E2E', () => {
 
     await page.getByPlaceholder('Correo').fill('juan@mail.com');
     await page.getByPlaceholder('Contraseña').fill('password123');
-    page.once('dialog', async dialog => {
-      expect(dialog.message()).toBe('Inicio de sesión exitoso');
-      await dialog.accept();
-    });
-
     await page.getByRole('button', { name: 'Iniciar Sesión' }).click();
 
-    await expect(page.locator('h2')).toHaveText('Iniciar Sesión');
+    // El login redirecciona a la página principal `/` y guarda el token en localStorage
+    await expect(page).toHaveURL(/\/$/);
     await expect.poll(async () => page.evaluate(() => localStorage.getItem('token'))).toBe(
       'e2e-login-token'
     );

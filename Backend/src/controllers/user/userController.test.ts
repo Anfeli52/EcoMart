@@ -27,7 +27,7 @@ describe('UserController', () => {
 			register: jest.fn(),
 			login: jest.fn()
 		}
-		controller = new UserController(userService)
+		controller = new UserController(userService as any)
 	})
 
 	describe('Happy Path - Operaciones válidas', () => {

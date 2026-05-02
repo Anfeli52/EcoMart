@@ -1,10 +1,14 @@
 import type { Request, Response } from 'express'
-import UserService from '../services/userService'
+
+interface IUserService {
+  register(payload: any): Promise<any>
+  login(payload: any): Promise<any>
+}
 
 class UserController {
-  private userService: UserService;
+  private userService: IUserService;
 
-  constructor(userService: UserService) {
+  constructor(userService: IUserService) {
     this.userService = userService
   }
 

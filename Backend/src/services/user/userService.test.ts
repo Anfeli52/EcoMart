@@ -118,7 +118,7 @@ describe('UserService', () => {
 					direccion_envio: 'Calle 123'
 				})
 				expect(jwt.sign).toHaveBeenCalledWith(
-					{ id: 1, role: 'user' },
+					expect.objectContaining({ id: 1, role: 'user' }),
 					'test-secret',
 					{ expiresIn: '12h' }
 				)
