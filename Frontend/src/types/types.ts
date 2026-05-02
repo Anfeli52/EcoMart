@@ -24,4 +24,11 @@ interface LoginResponse {
     user: User;
 }
 
-export type { RegisterData, LoginData, LoginResponse, User };
+interface Producto {
+    id: number,
+    nombre: string,
+    precio: number,
+    imagenUrl: string
+}
+
+export type { RegisterData, LoginData, LoginResponse, User, Producto };

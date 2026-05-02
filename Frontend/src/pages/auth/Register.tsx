@@ -2,6 +2,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { registerUser } from "../../services/auth/authService";
 import type { RegisterData } from "../../types/types";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Register = () => {
 
@@ -45,6 +46,8 @@ const Register = () => {
                 <input type="password" name="password" placeholder="Contraseña" onChange={handleChange} required />
                 <input type="text" name="direccion_envio" placeholder="Dirección de Envío" onChange={handleChange} required />
                 <button type="submit">Registrarse</button>
+                <button type="button" className="back-button" onClick={() => navigate("/")}>Cancelar</button>
+                <div className="link"><Link to="/login">¿Ya tienes una cuenta? Inicia sesión</Link></div>
             </form>
         </div>
     )
