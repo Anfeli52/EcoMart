@@ -4,6 +4,7 @@ import cors from 'cors'
 import 'dotenv/config'
 import userRoutes from './routes/userRoutes.ts'
 import productoRoutes from './routes/productoRoutes.ts'
+import cartRoutes from './routes/cartRoutes.ts'
 
 const app: Express = express()
 const PORT = process.env.PORT || 3000
@@ -15,6 +16,7 @@ app.use(express.json())
 //Aqui se montaran las rutas
 app.use('/user', userRoutes)
 app.use('/producto', productoRoutes)
+app.use('/cart', cartRoutes)
 
 //creamos el servidor
 app.listen(PORT, () => {
