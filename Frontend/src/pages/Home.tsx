@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getProducts } from "../services/product/productService";
 import type { Producto } from "../types/types";
-import { useAuth } from "../hooks/useAuth";
-import carritoIcon from "../assets/shopCart.png"
 import "../Home.css";
+import { Navbar } from "../components/Navbar";
+import { useAuth } from "../hooks/useAuth";
+import api from "../api/axios";
+import { addToCart } from "../services/cart/cartService";
 
 const Home = () => {
     const navigate = useNavigate();
     const [cartCount, setCartCount] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
+    const { token } = useAuth();
     
     const [productos, setProductos] = useState<Producto[]>([]);
-    
-    const { token, user, logout } = useAuth();
+
 
     useEffect(() => {
         const cargarProductos = async () => {
@@ -27,7 +29,16 @@ const Home = () => {
         cargarProductos();
     }, []);
     
-    const agregarAlCarrito = (productID: number) => {
+    const agregarAlCarrito = async (productID: number) => {
+        try {
+            if(!token) return navigate("/login");
+            await addToCart(productID, 1);
+
+        } catch (error) {
+            console.error("Error al agregar al carrito:", error);
+            alert("Error al agregar al carrito");
+            return;
+        }
         console.log("Producto agregado al carrito:", productID);
         setCartCount((prev) => prev + 1);
         setModalVisible(true);
@@ -38,31 +49,7 @@ const Home = () => {
 
     return (
         <div className="home-page">
-            <header className="home-header">
-                <div className="home-brand">EcoMart</div>
-                <div className="home-search">
-                    <input type="text" placeholder="Buscar" />
-                </div>
-                <div className="home-actions">
-                    <button className="icon-button shopCart"
-                    onClick={verCarrito}>
-                        <img src={carritoIcon} alt="Carrito de compras"/>
-                    </button>
-                    <div className="home-navbar">
-                        { token ? (
-                            <div>
-                                <span className="home-user">Hola, {user ?? "Usuario"}</span>
-                                <button className="home-button logout" onClick={logout}>Cerrar Sesión</button>
-                            </div>
-                        ): (
-                            <div>
-                                <Link to="/login" className="home-button login">Iniciar sesión</Link>
-                                <Link to="/register" className="home-button register">Registrarse</Link>
-                            </div>
-                        )}
-                    </div> 
-                </div>
-            </header>
+            <Navbar />
             {modalVisible && (
                 <div className="cart-modal-backdrop" onClick={cerrarModal}>
                     <div className="cart-modal" onClick={(e) => e.stopPropagation()}>
@@ -92,7 +79,7 @@ const Home = () => {
                     
                 </div>
         ))}
-        </main>
+            </main>
         </div>
     );
 }
