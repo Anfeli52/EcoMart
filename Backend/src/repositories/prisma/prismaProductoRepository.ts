@@ -1,5 +1,5 @@
 import { PrismaClient, type CategoriaProducto } from '@prisma/client'
-import ProductoRepository from '../interfaces/productoRepository.ts'
+import ProductoRepository from '../interfaces/producto/productoRepository.ts'
 
 interface CreateProductoData {
 	nombre: string

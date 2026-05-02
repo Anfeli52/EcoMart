@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaMariaDb } from '@prisma/adapter-mariadb'
-import PrismaProductoRepository from '../repositories/prisma/prismaProductoRepository.ts'
-import ProductoService from '../services/productoService.ts'
-import ProductoController from '../controllers/productoController.ts'
+import PrismaProductoRepository from '../../repositories/prisma/prismaProductoRepository.ts'
+import ProductoService from '../../services/producto/productoService.ts'
+import ProductoController from '../../controllers/producto/productoController.ts'
 
 const databaseUrl = process.env.DATABASE_URL
 if (!databaseUrl) {
