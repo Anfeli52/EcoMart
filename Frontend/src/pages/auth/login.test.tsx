@@ -9,7 +9,8 @@ jest.mock('react-router-dom', () => {
 		...actual,
 		Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
 			<a href={to}>{children}</a>
-		)
+		),
+		useNavigate: jest.fn()
 	};
 });
 
@@ -36,6 +37,12 @@ describe('Login Page', () => {
 
 	describe('Happy Path - Login exitoso', () => {
 		it('envia credenciales y navega al home cuando login es exitoso', async () => {
+			const { useNavigate } = jest.requireMock('react-router-dom') as {
+				useNavigate: jest.Mock;
+			};
+			const navigateMock = jest.fn();
+			useNavigate.mockReturnValue(navigateMock);
+
 			const loginMock = jest.fn().mockResolvedValue({
 				message: 'Inicio de sesión exitoso',
 				token: 'token-123',
@@ -71,7 +78,7 @@ describe('Login Page', () => {
 					correo: 'juan@mail.com',
 					password: 'password123'
 				});
-				expect(window.alert).toHaveBeenCalledWith('Inicio de sesión exitoso');
+				expect(navigateMock).toHaveBeenCalledWith('/');
 			});
 		});
 	});

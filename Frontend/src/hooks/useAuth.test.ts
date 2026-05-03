@@ -19,7 +19,7 @@ const HookConsumer = () => {
 	return React.createElement(
 		React.Fragment,
 		null,
-		React.createElement('span', { 'data-testid': 'user' }, user?.nombre ?? 'null')
+		React.createElement('span', { 'data-testid': 'user' }, user ?? 'null')
 	);
 };
 
@@ -27,13 +27,7 @@ describe('useAuth', () => {
 	describe('Happy Path - Hook disponible', () => {
 		it('retorna el contexto de autenticacion dentro de AuthProvider', () => {
 			const value = {
-				user: {
-					id: 1,
-					nombre: 'Juan',
-					correo: 'juan@mail.com',
-					role: 'user',
-					direccion_envio: 'Calle 123'
-				},
+				user: "Juan",
 				login: jest.fn(),
 				logout: jest.fn()
 			};
