@@ -22,15 +22,10 @@ const mockedRegisterUser = registerUser as jest.MockedFunction<typeof registerUs
 describe('Register Page', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
-		jest.spyOn(window, 'alert').mockImplementation(() => undefined);
-	});
-
-	afterEach(() => {
-		(window.alert as jest.Mock).mockRestore();
 	});
 
 	describe('Happy Path - Registro exitoso', () => {
-		it('envia formulario, muestra mensaje y navega a login cuando es exitoso', async () => {
+		it('envia formulario y navega a login cuando es exitoso', async () => {
 			mockedRegisterUser.mockResolvedValue({ message: 'Registro exitoso' });
 
 			render(
@@ -48,7 +43,10 @@ describe('Register Page', () => {
 			fireEvent.change(screen.getByPlaceholderText('Contraseña'), {
 				target: { name: 'password', value: 'password123' }
 			});
-			fireEvent.change(screen.getByPlaceholderText('Dirección de Envío'), {
+			fireEvent.change(screen.getByPlaceholderText('Confirma tu contraseña'), {
+				target: { name: 'confirmPassword', value: 'password123' }
+			});
+			fireEvent.change(screen.getByPlaceholderText('Dirección de envío'), {
 				target: { name: 'direccion_envio', value: 'Calle 123' }
 			});
 
@@ -61,7 +59,6 @@ describe('Register Page', () => {
 					password: 'password123',
 					direccion_envio: 'Calle 123'
 				});
-				expect(window.alert).toHaveBeenCalledWith('Registro exitoso');
 				expect(mockNavigate).toHaveBeenCalledWith('/login');
 			});
 		});
@@ -86,14 +83,17 @@ describe('Register Page', () => {
 			fireEvent.change(screen.getByPlaceholderText('Contraseña'), {
 				target: { name: 'password', value: 'password123' }
 			});
-			fireEvent.change(screen.getByPlaceholderText('Dirección de Envío'), {
+			fireEvent.change(screen.getByPlaceholderText('Confirma tu contraseña'), {
+				target: { name: 'confirmPassword', value: 'password123' }
+			});
+			fireEvent.change(screen.getByPlaceholderText('Dirección de envío'), {
 				target: { name: 'direccion_envio', value: 'Calle 123' }
 			});
 
 			fireEvent.click(screen.getByRole('button', { name: 'Registrarse' }));
 
 			await waitFor(() => {
-				expect(window.alert).toHaveBeenCalledWith('Error en el registro');
+				expect(screen.getByText('Error en el registro')).toBeInTheDocument();
 			});
 		});
 	});
@@ -119,7 +119,10 @@ describe('Register Page', () => {
 			fireEvent.change(screen.getByPlaceholderText('Contraseña'), {
 				target: { name: 'password', value: 'A'.repeat(64) }
 			});
-			fireEvent.change(screen.getByPlaceholderText('Dirección de Envío'), {
+			fireEvent.change(screen.getByPlaceholderText('Confirma tu contraseña'), {
+				target: { name: 'confirmPassword', value: 'A'.repeat(64) }
+			});
+			fireEvent.change(screen.getByPlaceholderText('Dirección de envío'), {
 				target: { name: 'direccion_envio', value: longDireccion }
 			});
 

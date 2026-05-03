@@ -33,11 +33,11 @@ describe('productService', () => {
 				}
 			];
 
-			api.get.mockResolvedValue({ data: products });
+				api.get.mockResolvedValue({ data: { productos: products } });
 
 			const result = await getProducts();
 
-			expect(api.get).toHaveBeenCalledWith('/products');
+				expect(api.get).toHaveBeenCalledWith('/producto/');
 			expect(result).toEqual(products);
 		});
 	});
@@ -48,13 +48,13 @@ describe('productService', () => {
 			api.get.mockRejectedValue(error);
 
 			await expect(getProducts()).rejects.toThrow('fallo al obtener productos');
-			expect(api.get).toHaveBeenCalledWith('/products');
+				expect(api.get).toHaveBeenCalledWith('/producto/');
 		});
 	});
 
 	describe('Boundary Testing - Casos límite de respuesta', () => {
 		it('getProducts retorna arreglo vacío cuando no hay productos', async () => {
-			api.get.mockResolvedValue({ data: [] });
+				api.get.mockResolvedValue({ data: { productos: [] } });
 
 			const result = await getProducts();
 
