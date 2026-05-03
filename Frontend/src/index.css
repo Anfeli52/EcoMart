@@ -125,20 +125,7 @@
   text-decoration: underline;
 }
 
-.icon-button {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: transparent;
-  border: none;
-  font-size: 1.2rem;
-  color: #64748b;
-  cursor: pointer;
-}
 
-.icon-button:hover {
-  color: #0f172a;
-}
 
 .error {
   color: #ef4444;
