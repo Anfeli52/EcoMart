@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
-import UserController from './userController.ts'
+import UserController from './../user/userController'
 
 type MockResponse = {
 	status: ReturnType<typeof jest.fn>

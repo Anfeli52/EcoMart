@@ -34,10 +34,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const login = async (data: LoginData) => {
         const response = await loginUser(data);
-        const decodedToken: any = jwtDecode(response.token);
+        
         localStorage.setItem("token", response.token);
         setToken(response.token);
-        setUser(decodedToken.name);
+        try {
+            const decodedToken: any = jwtDecode(response.token);
+            setUser(decodedToken?.name || null);
+        } catch (error) {
+            setUser(null);
+        }
 
         return response;
     };
