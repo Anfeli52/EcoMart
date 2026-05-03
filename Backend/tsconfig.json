@@ -13,7 +13,8 @@
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": true,
+    "types": ["jest"]
   },
   "ts-node": {
     "esm": true,
