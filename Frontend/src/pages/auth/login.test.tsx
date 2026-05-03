@@ -28,11 +28,6 @@ const { AuthContext } = jest.requireMock('../../context/AuthContext') as {
 describe('Login Page', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
-		jest.spyOn(window, 'alert').mockImplementation(() => undefined);
-	});
-
-	afterEach(() => {
-		(window.alert as jest.Mock).mockRestore();
 	});
 
 	describe('Happy Path - Login exitoso', () => {
@@ -84,7 +79,7 @@ describe('Login Page', () => {
 	});
 
 	describe('Negative Testing - Errores en login', () => {
-		it('muestra alert con mensaje de error cuando login falla', async () => {
+		it('muestra mensaje de error cuando login falla', async () => {
 			const loginMock = jest.fn().mockRejectedValue(new Error('Credenciales invalidas'));
 
 			render(
@@ -106,12 +101,12 @@ describe('Login Page', () => {
 			fireEvent.click(screen.getByRole('button', { name: 'Iniciar Sesión' }));
 
 			await waitFor(() => {
-				expect(window.alert).toHaveBeenCalledWith('Credenciales invalidas');
+				expect(screen.getByText('Credenciales invalidas')).toBeInTheDocument();
 			});
 		});
 
 		it('muestra error genérico cuando login lanza error inesperado', async () => {
-			const loginMock = jest.fn().mockRejectedValue(new Error('Network error'));
+			const loginMock = jest.fn().mockRejectedValue('Network error');
 
 			render(
 				<MemoryRouter>
@@ -132,7 +127,7 @@ describe('Login Page', () => {
 			fireEvent.click(screen.getByRole('button', { name: 'Iniciar Sesión' }));
 
 			await waitFor(() => {
-				expect(window.alert).toHaveBeenCalledWith('Network error');
+				expect(screen.getByText('Error en el inicio de sesión')).toBeInTheDocument();
 			});
 		});
 	});
