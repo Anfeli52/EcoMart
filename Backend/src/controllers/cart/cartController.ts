@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { AuthRequest } from '../middleware/authMiddleware';
+import { AuthRequest } from '../../middleware/authMiddleware';
 
 interface CartService {
     getCart(userId: number): Promise<any>;

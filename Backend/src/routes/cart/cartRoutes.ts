@@ -1,6 +1,6 @@
 import express from 'express'
-import { cartController } from '../container/cartContainer.ts'
-import authMiddleware from '../middleware/authMiddleware.ts';
+import { cartController } from '../../container/cart/cartContainer.ts'
+import authMiddleware from '../../middleware/authMiddleware.ts';
 
 const router = express.Router();
 

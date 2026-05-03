@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaMariaDb } from '@prisma/adapter-mariadb'
-import PrismaCartRepository from "../repositories/prisma/prismaCartRepository.ts";
-import CartService from "../services/cartService.ts";
-import CartController from "../controllers/cartController.ts";
+import PrismaCartRepository from "../../repositories/prisma/prismaCartRepository.ts";
+import CartService from "../../services/cart/cartService.ts";
+import CartController from "../../controllers/cart/cartController.ts";
 
 const databaseUrl = process.env.DATABASE_URL
 if (!databaseUrl) {

@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import CartRepository from "../interfaces/cartRepository";
+import CartRepository from "../interfaces/cart/cartRepository";
 
 class PrismaCartRepository extends CartRepository {
     private prisma: PrismaClient;

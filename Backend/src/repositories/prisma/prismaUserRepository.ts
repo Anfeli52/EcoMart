@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import UserRepository from '../interfaces/userRepository.ts'
+import UserRepository from '../interfaces/user/userRepository.ts'
 
 interface RegisterData {
   nombre: string
