@@ -16,10 +16,6 @@ export const Navbar = () => {
                     <input type="text" placeholder="Buscar" />
                 </div>
                 <div className="home-actions">
-                    <button className="icon-button shopCart"
-                    onClick={verCarrito}>
-                        <img src={carritoIcon} alt="Carrito de compras"/>
-                    </button>
                     <div className="home-navbar">
                         { token ? (
                             <div>
@@ -32,7 +28,11 @@ export const Navbar = () => {
                                 <Link to="/register" className="home-button register">Registrarse</Link>
                             </div>
                         )}
-                    </div> 
+                    </div>
+                    <button className="icon-button shopCart"
+                    onClick={verCarrito}>
+                        <img src={carritoIcon} alt="Carrito de compras"/>
+                    </button>
                 </div>
             </header>
             
