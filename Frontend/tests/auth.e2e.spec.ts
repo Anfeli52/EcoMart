@@ -50,12 +50,9 @@ test.describe('Auth E2E', () => {
 
     await page.getByPlaceholder('Nombre').fill('Juan');
     await page.getByPlaceholder('Correo').fill('juan@mail.com');
-    await page.getByPlaceholder('Contraseña').fill('password123');
-    await page.getByPlaceholder('Dirección de Envío').fill('Calle 123');
-    page.once('dialog', async dialog => {
-      expect(dialog.message()).toBe('Registro exitoso');
-      await dialog.accept();
-    });
+    await page.locator('input[name="password"]').fill('password123');
+    await page.locator('input[name="confirmPassword"]').fill('password123');
+    await page.getByPlaceholder('Dirección de envío').fill('Calle 123');
 
     await page.getByRole('button', { name: 'Registrarse' }).click();
 
@@ -74,19 +71,16 @@ test.describe('Auth E2E', () => {
       });
     });
 
-    page.once('dialog', async dialog => {
-      expect(dialog.message()).toBe('El correo ya esta registrado');
-      await dialog.accept();
-    });
-
     await page.goto('/register');
 
     await page.getByPlaceholder('Nombre').fill('Ana');
     await page.getByPlaceholder('Correo').fill('ana@mail.com');
-    await page.getByPlaceholder('Contraseña').fill('password123');
-    await page.getByPlaceholder('Dirección de Envío').fill('Calle 456');
+    await page.locator('input[name="password"]').fill('password123');
+    await page.locator('input[name="confirmPassword"]').fill('password123');
+    await page.getByPlaceholder('Dirección de envío').fill('Calle 456');
     await page.getByRole('button', { name: 'Registrarse' }).click();
 
+    await expect(page.locator('p.error')).toContainText('El correo ya esta registrado');
     await expect(page).toHaveURL(/\/register$/);
   });
 });
