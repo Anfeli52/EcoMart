@@ -1,0 +1,118 @@
+.admin-product-card {
+    min-height: 420px;
+    padding-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.product-description {
+    color: #475569;
+    line-height: 1.6;
+    min-height: 3.5rem;
+}
+
+.product-meta {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0.25rem 0;
+}
+
+.admin-card-actions {
+    margin-top: auto;
+    display: flex;
+    gap: 0.75rem;
+}
+
+.secondary-button {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    color: #111827;
+    border-radius: 999px;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}.secondary-button:hover {
+    background: #e2e8f0;
+}
+
+.danger-button {
+    width: 100%;
+    border: none;
+    background: #dc2626;
+    color: white;
+    border-radius: 999px;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+}.danger-button:hover {
+    background: #b91c1c;
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    z-index: 70;
+}
+
+.admin-modal {
+    width: min(100%, 540px);
+    background: white;
+    border-radius: 24px;
+    padding: 1.5rem;
+    box-shadow: 0 32px 80px rgba(15, 23, 42, 0.2);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.admin-form label {
+    display: grid;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-form select {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.admin-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.delete-text {
+    color: #334155;
+    line-height: 1.7;
+}
