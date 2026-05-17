@@ -32,11 +32,15 @@ interface Producto {
     precio: number,
     imagenUrl: string
     stock: number;
+}interface ProductoDetalle extends Producto {
+    descripcion: string;
+    categoria: string;
 }
+
 interface CartItemTypes {
     id_producto: number;
     producto: Producto;
     cantidad: number;
 }
 
-export type { RegisterData, LoginData, LoginResponse, User, Producto, CartItemTypes };
+export type { RegisterData, LoginData, LoginResponse, User, Producto, CartItemTypes, ProductoDetalle };
